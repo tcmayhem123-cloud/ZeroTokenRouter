@@ -13,6 +13,7 @@ from .config import ModelCatalog, Settings
 from .fast_answers import answer as fast_answer
 from .routing import decide
 from .types import Backend, Category, Result, RouteDecision, RoutingProfile, Task
+from .verification import verify_answer
 
 LOGGER = logging.getLogger("tokenrouter")
 
@@ -37,34 +38,71 @@ class Agent:
         }
         answers: dict[str, str] = {}
         remote_jobs: dict[str, Future[str]] = {}
+        local_results: dict[str, str] = {}
+        
+        # 1. First pass: Run local candidate tasks and verify them
+        unverified_tasks: list[Task] = []
+        for task in tasks:
+            decision = decisions[task.task_id]
+            if decision.backend is Backend.LOCAL:
+                local_ans = self._answer_local(task, decision)
+                local_results[task.task_id] = local_ans
+                
+                # Verify local response format and compliance
+                if verify_answer(decision.category, task.prompt, local_ans):
+                    answers[task.task_id] = local_ans
+                else:
+                    unverified_tasks.append(task)
 
+        # 2. Second pass: Run remote tasks and escalated local tasks in parallel
         with ThreadPoolExecutor(max_workers=self.settings.remote_workers) as pool:
             for task in tasks:
                 decision = decisions[task.task_id]
-                if decision.backend is Backend.FIREWORKS and self.remote.available:
+                needs_remote = (
+                    decision.backend is Backend.FIREWORKS or
+                    (task in unverified_tasks and self.remote.available)
+                )
+                if needs_remote and self.remote.available:
+                    # If this is an escalated local task, construct a remote RouteDecision
+                    escalation_decision = decision
+                    if decision.backend is Backend.LOCAL:
+                        is_code = decision.category in {Category.CODE_DEBUGGING, Category.CODE_GENERATION}
+                        model = self.catalog.code() if is_code else self.catalog.general()
+                        escalation_decision = RouteDecision(
+                            category=decision.category,
+                            backend=Backend.FIREWORKS,
+                            model=model,
+                            max_tokens=decision.max_tokens,
+                            reasoning_effort="low" if decision.category in {Category.MATH, Category.LOGIC} else "none"
+                        )
                     remote_jobs[task.task_id] = pool.submit(
-                        self.remote.answer, decision, task.prompt
+                        self.remote.answer, escalation_decision, task.prompt
                     )
-
+            
+            # 3. Third pass: Collect results, falling back to local if remote fails
             for task in tasks:
-                decision = decisions[task.task_id]
-                if task.task_id not in remote_jobs:
-                    answers[task.task_id] = self._answer_local(task, decision)
-
-            for task in tasks:
+                if task.task_id in answers:
+                    continue  # Already resolved locally
+                
                 future = remote_jobs.get(task.task_id)
-                if future is None:
-                    continue
-                try:
-                    answers[task.task_id] = future.result()
-                except Exception as exc:  # backend/network failures must preserve schema
-                    LOGGER.warning(
-                        "Remote route failed for %s; using local fallback: %s",
+                if future is not None:
+                    try:
+                        answers[task.task_id] = future.result()
+                    except Exception as exc:
+                        LOGGER.warning(
+                            "Remote route failed for %s; using local fallback: %s",
+                            task.task_id,
+                            type(exc).__name__,
+                        )
+                        answers[task.task_id] = local_results.get(
+                            task.task_id,
+                            self._answer_local(task, decisions[task.task_id])
+                        )
+                else:
+                    # No remote job ran; use local result
+                    answers[task.task_id] = local_results.get(
                         task.task_id,
-                        type(exc).__name__,
-                    )
-                    answers[task.task_id] = self._answer_local(
-                        task, decisions[task.task_id]
+                        self._answer_local(task, decisions[task.task_id])
                     )
 
         return [Result(task.task_id, answers[task.task_id]) for task in tasks]
@@ -73,10 +111,6 @@ class Agent:
         deterministic = fast_answer(decision.category, task.prompt)
         if deterministic is not None:
             return deterministic
-        if self.settings.profile is not RoutingProfile.LOCAL and (
-            not self.settings.fireworks_api_key or decision.backend is Backend.FIREWORKS
-        ):
-            return emergency_answer(decision.category, task.prompt)
         try:
             return self.local.answer(
                 decision.category, task.prompt, decision.max_tokens

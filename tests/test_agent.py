@@ -51,8 +51,13 @@ def test_agent_preserves_order_and_routes(tmp_path: Path) -> None:
     assert results[1].answer == "remote:ok"
 
 
+class FakeLocalFail:
+    def answer(self, category: Category, prompt: str, max_tokens: int) -> str:
+        raise BackendError("local failed")
+
+
 def test_remote_failure_falls_back_locally(tmp_path: Path) -> None:
-    agent = Agent(settings(tmp_path), local=FakeLocal(), remote=FakeRemote(fail=True))
+    agent = Agent(settings(tmp_path), local=FakeLocalFail(), remote=FakeRemote(fail=True))
     result = agent.run([Task("factual", "What is photosynthesis?")])[0]
     assert result.answer.startswith("Unable to produce a verified answer")
 
