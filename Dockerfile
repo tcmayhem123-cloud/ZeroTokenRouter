@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.7
-FROM python:3.11-alpine
+FROM python:3.11-slim
 
 ARG MODEL_REVISION=7dabda4d13d513e3e842b20f0d435c732f172cbe
 ARG MODEL_URL=https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/7dabda4d13d513e3e842b20f0d435c732f172cbe/qwen2.5-3b-instruct-q4_k_m.gguf
@@ -18,7 +18,11 @@ ENV PYTHONUNBUFFERED=1 \
 
 WORKDIR /app
 
-RUN apk add --no-cache ca-certificates curl libgomp libstdc++
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements-runtime.txt ./
 RUN pip install --no-cache-dir -r requirements-runtime.txt
