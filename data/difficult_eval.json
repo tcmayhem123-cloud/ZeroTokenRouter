@@ -1,0 +1,52 @@
+[
+  {
+    "task_id": "diff-01",
+    "prompt": "Explain the key differences between a Thread and a Process in operating systems. Specifically cover memory sharing, context switching overhead, and crash isolation.",
+    "expect": {"all": ["thread", "process", "memory", "overhead", "isolation"]}
+  },
+  {
+    "task_id": "diff-02",
+    "prompt": "A reservoir starts with 15,000 gallons. It loses 25 gallons per hour for 12 hours. It is refilled at 35 gallons per hour for 8 hours. Then, a leak drains it at 15 gallons per hour for 6 hours. Finally, it sells 8% of its remaining volume. How many gallons remain in the reservoir?",
+    "expect": {"number": 13698.8}
+  },
+  {
+    "task_id": "diff-03",
+    "prompt": "Classify the sentiment of this review and provide a one-sentence justification: 'The design is absolutely stunning and the keyboard is a joy to type on, but the processor throttles heavily under moderate loads and the battery barely lasts three hours.'",
+    "expect": {"any": ["mixed", "neutral"], "all": ["design", "battery", "throttle"]}
+  },
+  {
+    "task_id": "diff-04",
+    "prompt": "Summarize in exactly two sentences: Quantum computing leverages superposition and entanglement to perform calculations exponentially faster than classical computers for specific algorithms. However, physical qubits are highly susceptible to environmental noise and decoherence. Consequently, building fault-tolerant quantum systems requires massive error correction overhead, making commercial scalability a distant goal.",
+    "expect": {"all": ["quantum", "decoherence", "error correction"], "max_sentences": 2}
+  },
+  {
+    "task_id": "diff-05",
+    "prompt": "Summarize the following in exactly three bullet points, each no longer than 15 words: The transition to electric vehicles (EVs) has accelerated due to government subsidies and climate initiatives. Drivers benefit from lower fuel costs and reduced emissions. However, the EV transition faces significant bottlenecks, particularly grid capacity limitations and shortages of critical battery minerals. Governments are investing in fast-charging networks and mining partnerships to resolve these constraints.",
+    "expect": {"all": ["ev", "subsid", "mineral"], "max_sentences": 3}
+  },
+  {
+    "task_id": "diff-06",
+    "prompt": "Extract all named entities and label each as PERSON, ORGANIZATION, LOCATION, or DATE: On October 24 2021, Satya Nadella announced that Microsoft would expand its Azure cloud infrastructure to new regions in Warsaw, partnering with local firms like Cloud Alliance.",
+    "expect": {"all": ["satya nadella", "october 24 2021", "microsoft", "warsaw", "cloud alliance"]}
+  },
+  {
+    "task_id": "diff-07",
+    "prompt": "Four colleagues, Alex, Blake, Charlie, and Drew, occupy adjacent offices numbered 101, 102, 103, and 104. Blake occupies office 103. Alex does not occupy office 101. Drew's office number is higher than Charlie's office number. Who occupies office 101?",
+    "expect": {"all": ["charlie"]}
+  },
+  {
+    "task_id": "diff-08",
+    "prompt": "This function is supposed to append an item to a list and return it, but it has a bug where default arguments persist across multiple calls. Debug and fix it:\n\ndef add_to_list(item, target=[]):\n    target.append(item)\n    return target",
+    "expect": {"all": ["is none", "target = []"]}
+  },
+  {
+    "task_id": "diff-09",
+    "prompt": "Write a Python function named unique_pairs that takes a list of numbers and returns a list of unique tuple pairs that sum to a target value. Each pair should be sorted, and the overall list of pairs should be sorted.",
+    "expect": {"all": ["def unique_pairs", "tuple"]}
+  },
+  {
+    "task_id": "diff-10",
+    "prompt": "Write a Python function named find_median that calculates the median of a list of numbers. The function must raise a ValueError if the input list is empty.",
+    "expect": {"all": ["def find_median", "valueerror"]}
+  }
+]
