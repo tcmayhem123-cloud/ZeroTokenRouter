@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zero-token-router"
+version = "0.1.0"
+description = "Zero-token-first hybrid routing agent for AMD Developer Hackathon ACT II Track 1"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "requests==2.32.4",
+]
+
+[project.scripts]
+token-router = "tokenrouter.agent:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+

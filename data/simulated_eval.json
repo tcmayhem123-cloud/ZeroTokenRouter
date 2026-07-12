@@ -1,0 +1,98 @@
+[
+  {
+    "task_id": "eval-01",
+    "prompt": "What is the capital of Japan?",
+    "expect": {"all": ["tokyo"]}
+  },
+  {
+    "task_id": "eval-02",
+    "prompt": "What process do plants use to convert light energy into chemical energy?",
+    "expect": {"all": ["photosynthesis"]}
+  },
+  {
+    "task_id": "eval-03",
+    "prompt": "A store has 240 items. It sells 15% on Monday and 60 more on Tuesday. How many items remain?",
+    "expect": {"number": 144}
+  },
+  {
+    "task_id": "eval-04",
+    "prompt": "Calculate 18 percent of 250.",
+    "expect": {"number": 45}
+  },
+  {
+    "task_id": "eval-05",
+    "prompt": "Classify the sentiment: The camera is excellent and I love the battery life.",
+    "expect": {"all": ["positive"]}
+  },
+  {
+    "task_id": "eval-06",
+    "prompt": "Classify the sentiment: The battery is great, but the fragile screen is disappointing.",
+    "expect": {"any": ["mixed", "neutral"]}
+  },
+  {
+    "task_id": "eval-07",
+    "prompt": "Summarize in one sentence: Bees pollinate many crops. Habitat loss and pesticide exposure can reduce bee populations. Protecting diverse flowering habitats supports both wild and managed bees.",
+    "expect": {"any": ["pollinat", "bee"], "max_sentences": 1}
+  },
+  {
+    "task_id": "eval-08",
+    "prompt": "Summarize in exactly one sentence: Encryption converts readable data into a protected form. A key is required to recover the original information.",
+    "expect": {"all": ["encrypt", "key"], "max_sentences": 1}
+  },
+  {
+    "task_id": "eval-09",
+    "prompt": "Extract all named entities and their types from: Ada Lovelace worked with Charles Babbage in London.",
+    "expect": {"all": ["ada lovelace", "charles babbage", "london"]}
+  },
+  {
+    "task_id": "eval-10",
+    "prompt": "Extract named entities and label their types: Microsoft opened an office in Nairobi in January 2024.",
+    "expect": {"all": ["microsoft", "nairobi", "january 2024"]}
+  },
+  {
+    "task_id": "eval-11",
+    "prompt": "This function should sum every value but has a bug. Find and fix it: def total(nums): return nums[0]",
+    "expect": {"all": ["sum", "nums"]}
+  },
+  {
+    "task_id": "eval-12",
+    "prompt": "Debug this Python function: def is_even(n): return n % 2 == 1",
+    "expect": {"all": ["% 2", "== 0"]}
+  },
+  {
+    "task_id": "eval-13",
+    "prompt": "Ava, Ben, and Cara each choose a different drink: tea, coffee, juice. Ben chooses coffee. Ava does not choose juice. Who chooses tea?",
+    "expect": {"all": ["ava"]}
+  },
+  {
+    "task_id": "eval-14",
+    "prompt": "Three friends, Sam, Jo, and Lee, each own a different pet: cat, dog, bird. Sam does not own the bird. Jo owns the dog. Who owns the cat?",
+    "expect": {"all": ["sam"]}
+  },
+  {
+    "task_id": "eval-15",
+    "prompt": "Write a Python function named clamp that limits a number to an inclusive low and high bound.",
+    "expect": {"all": ["def clamp", "min", "max"]}
+  },
+  {
+    "task_id": "eval-16",
+    "prompt": "Write a Python function named unique_ordered that removes duplicates while preserving input order.",
+    "expect": {"all": ["def unique_ordered"], "any": ["seen", "dict.fromkeys"]}
+  },
+  {
+    "task_id": "eval-17",
+    "prompt": "What does HTTP stand for?",
+    "expect": {"all": ["hypertext transfer protocol"]}
+  },
+  {
+    "task_id": "eval-18",
+    "prompt": "A tank starts with 480 liters. It drains 8 liters per minute for 15 minutes, is refilled at 12 liters per minute for 20 minutes, then drains 5 liters per minute for 10 minutes. How many liters remain?",
+    "expect": {"number": 550}
+  },
+  {
+    "task_id": "eval-19",
+    "prompt": "Implement a Python function named second_largest that returns the second-largest distinct number and raises ValueError when fewer than two distinct values exist.",
+    "expect": {"all": ["def second_largest", "valueerror"], "any": ["set", "distinct"]}
+  }
+]
+

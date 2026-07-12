@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ZeroToken Router Presentation — AMD Developer Hackathon ACT II Track 1">
+  <title>ZeroToken Router — Hackathon Pitch Deck</title>
+  
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #07090e;
+      --panel-bg: rgba(13, 20, 30, 0.7);
+      --border-color: rgba(38, 53, 60, 0.5);
+      --ink: #f1f5f9;
+      --muted: #94a3b8;
+      
+      /* Vibrant Accent Colors */
+      --green: #10b981;
+      --green-glow: rgba(16, 185, 129, 0.15);
+      --green-bright: #34d399;
+      --amber: #f59e0b;
+      --amber-glow: rgba(245, 158, 11, 0.15);
+      --coral: #f43f5e;
+      --purple: #8b5cf6;
+      --blue: #3b82f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 10% 20%, #11251d 0%, transparent 40%),
+                  radial-gradient(circle at 90% 80%, #151129 0%, transparent 45%),
+                  var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Container */
+    .deck-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      position: relative;
+    }
+
+    /* Slides Wrapper */
+    .slide-wrapper {
+      width: min(1200px, 100%);
+      height: min(680px, 85vh);
+      position: relative;
+      perspective: 1000px;
+    }
+
+    /* Individual Slide */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      backdrop-filter: blur(12px);
+      padding: 48px;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.95) translateZ(-50px);
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateZ(0);
+    }
+
+    /* Typography & Headers */
+    .eyebrow {
+      font-family: 'Outfit', sans-serif;
+      color: var(--green-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .slide h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide h3 {
+      font-family: 'Outfit', sans-serif;
+      color: var(--muted);
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-weight: 400;
+      margin-bottom: 24px;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .full-width {
+      grid-template-columns: 1fr;
+    }
+
+    /* Content Lists */
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .bullet-list li {
+      position: relative;
+      padding-left: 28px;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+
+    .bullet-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    /* Visual Components */
+    .visual-panel {
+      background: rgba(8, 11, 16, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      height: 100%;
+      min-height: 250px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Slide 1 Visual: Bottleneck */
+    .bottleneck-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .stream-cards {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .card-tag {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border-color);
+      color: var(--muted);
+      animation: pulse 2s infinite alternate;
+    }
+
+    .expensive-gate {
+      padding: 16px 24px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #be123c 0%, #e11d48 100%);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      box-shadow: 0 0 20px rgba(244, 63, 94, 0.2);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: center;
+      width: 80%;
+    }
+
+    /* Slide 2 Visual: Route Grid */
+    .route-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .route-card {
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s;
+    }
+
+    .route-card.local-highlight {
+      border-color: var(--green);
+      box-shadow: inset 0 0 12px var(--green-glow);
+    }
+
+    .route-card.remote-highlight {
+      border-color: var(--amber);
+      box-shadow: inset 0 0 12px var(--amber-glow);
+    }
+
+    .route-label {
+      font-weight: 600;
+    }
+
+    .route-dest {
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: monospace;
+    }
+
+    .bg-green-badge { background: var(--green-glow); color: var(--green-bright); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .bg-amber-badge { background: var(--amber-glow); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+
+    /* Slide 3 Diagram */
+    .flow-diagram {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      align-items: center;
+    }
+
+    .flow-node {
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-align: center;
+      width: 80%;
+    }
+
+    .flow-split {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .flow-subnode {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Slide 4 Table & Chart */
+    .performance-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .metrics-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    .metrics-table th, .metrics-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .metrics-table th {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .metrics-table tr:last-child td {
+      border: none;
+    }
+
+    .chart-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bar-label {
+      width: 80px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 20px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 1s ease-in-out;
+    }
+
+    /* Footer & Brand Info */
+    .slide-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .closing-bold {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      color: var(--green-bright);
+      text-shadow: 0 0 10px var(--green-glow);
+    }
+
+    /* Global Navigation Controls */
+    .controls-container {
+      width: min(1200px, 100%);
+      margin: 0 auto;
+      padding: 0 40px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn-nav {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      color: var(--ink);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      border-color: var(--green);
+      background: var(--green-glow);
+      color: var(--green-bright);
+      transform: scale(1.05);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .dots-indicator {
+      display: flex;
+      gap: 10px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .dot.active {
+      background: var(--green-bright);
+      box-shadow: 0 0 10px var(--green);
+      width: 24px;
+      border-radius: 10px;
+    }
+
+    /* Progress Indicator Bar */
+    .progress-bar-track {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green) 0%, var(--purple) 100%);
+      width: 20%;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      border-bottom-left-radius: 24px;
+    }
+
+    /* Keyboard shortcuts helper */
+    .shortcuts-helper {
+      position: absolute;
+      top: 15px;
+      right: 40px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(1.03); opacity: 1; }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .slide-body {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .visual-panel {
+        display: none; /* Hide visual on smaller viewports in presentation mode */
+      }
+      .slide {
+        padding: 24px;
+      }
+      .deck-container {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="shortcuts-helper">Use <b>←</b> and <b>→</b> arrow keys or Spacebar to navigate</div>
+
+  <!-- Deck Container -->
+  <div class="deck-container">
+    <div class="slide-wrapper">
+      
+      <!-- Slide 1: Problem -->
+      <div class="slide active" id="slide-1">
+        <div>
+          <div class="eyebrow">AMD Developer Hackathon ACT II &middot; Track 1</div>
+          <h2>Enterprise Inference Overhead</h2>
+          <h3>"Every task does not need a premium model."</h3>
+        </div>
+        
+        <div class="slide-body">
+          <div>
+            <ul class="bullet-list">
+              <li><strong>The Cost Problem</strong>: Production pipelines wastefully route basic sentiment, summarization, and math requests to cloud-hosted premium models.</li>
+              <li><strong>Scale Issues</strong>: High network roundtrips, strict rate limits, and soaring monthly invoices for trivial tasks.</li>
+              <li><strong>Unified Interface Requirement</strong>: Enterprises need a single gateway that guarantees 100% correctness while optimizing expenditures.</li>
+            </ul>
+          </div>
+          <div class="visual-panel">
+            <div class="bottleneck-visual">
+              <span class="eyebrow">Baseline Single-Model Route</span>
+              <div class="stream-cards">
+                <span class="card-tag">Sentiment Review</span>
+                <span class="card-tag">Basic Sum</span>
+                <span class="card-tag">Factual Q</span>
+                <span class="card-tag">Clamp Function</span>
+                <span class="card-tag">Logic Puzzle</span>
+              </div>
+              <div class="arrow" style="font-size: 2rem;">&darr;</div>
+              <div class="expensive-gate">Expensive Premium API ($$$)</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="slide-footer">
+          <div class="brand-group">
+            <span>ZeroToken Router</span>
+            <span class="closing-bold">ACT II</span>
+          </div>
+          <div>Slide 1 of 5</div>
+        </div>
+        
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" style="width: 20%;"></div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Solution -->
+      <div class="slide" id="slide-2">
+        <div>
+          <div class="eyebrow">AMD Developer Hackathon ACT II &middot; Track 1</div>
+          <h2>ZeroToken Router</h2>
+          <h3>"Prove locally. Escalate only when necessary."</h3>
+        </div>
+        
+        <div class="slide-body">
+          <div>
+            <ul class="bullet-list">
+              <li><strong>Dynamic Classification</strong>: Instant, zero-token categorization maps input queries to specific domains on startup.</li>
+              <li><strong>Zero-Token Local Execution</strong>: High-confidence heuristic math, summarization, NER, and sentiment logic are executed directly inside the container.</li>
+              <li><strong>Fallback Guarantee</strong>: Remote API exceptions or timeouts automatically fall back to deterministic emergency outputs, avoiding container crashes.</li>
+            </ul>
+          </div>
+          <div class="visual-panel">
+            <div class="route-visual">
+              <span class="eyebrow" style="text-align: center;">In-Memory Gateway Classifier</span>
+              <div class="route-card local-highlight">
+                <span class="route-label">Sentiment, NER, Summaries</span>
+                <span class="route-dest bg-green-badge">Local Heuristics (0 Tokens)</span>
+              </div>
+              <div class="route-card local-highlight">
+                <span class="route-label">Simple Arithmetic</span>
+                <span class="route-dest bg-green-badge">Fast Regex Solver (0 Tokens)</span>
+              </div>
+              <div class="route-card remote-highlight">
+                <span class="route-label">Complex Logic & Coding</span>
+                <span class="route-dest bg-amber-badge">Fireworks Escalation</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="slide-footer">
+          <div class="brand-group">
+            <span>ZeroToken Router</span>
+            <span class="closing-bold">ACT II</span>
+          </div>
+          <div>Slide 2 of 5</div>
+        </div>
+        
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" style="width: 40%;"></div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Technical Architecture -->
+      <div class="slide" id="slide-3">
+        <div>
+          <div class="eyebrow">AMD Developer Hackathon ACT II &middot; Track 1</div>
+          <h2>Technical Architecture</h2>
+          <h3>"Engineered for strict hardware and runtime limits."</h3>
+        </div>
+        
+        <div class="slide-body">
+          <div>
+            <ul class="bullet-list">
+              <li><strong>Bundled Model</strong>: CPU-only Qwen2.5 3B GGUF model compiled inside the Docker image using optimized `llama-cpp-python`.</li>
+              <li><strong>Targeted Premium Routing</strong>: Escalates factual/logic tasks to MiniMax M3 and coding queries to Kimi K2.7 Code.</li>
+              <li><strong>Grading Constraints Compliant</strong>: Fits easily inside the 4 GB RAM, 2 vCPU, and 10 GB compressed image thresholds.</li>
+            </ul>
+          </div>
+          <div class="visual-panel">
+            <div class="flow-diagram">
+              <div class="flow-node">Input Batch: <code>tasks.json</code></div>
+              <div class="arrow">&darr;</div>
+              <div class="flow-node" style="border-color: var(--purple);">Deterministic Classifier</div>
+              <div class="arrow">&darr;</div>
+              <div class="flow-split">
+                <div class="flow-subnode bg-green-badge">Local Solver & Qwen</div>
+                <div class="flow-subnode bg-amber-badge">Fireworks API Route</div>
+              </div>
+              <div class="arrow">&darr;</div>
+              <div class="flow-node" style="border-color: var(--green);">Atomic <code>results.json</code> Output</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="slide-footer">
+          <div class="brand-group">
+            <span>ZeroToken Router</span>
+            <span class="closing-bold">ACT II</span>
+          </div>
+          <div>Slide 3 of 5</div>
+        </div>
+        
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" style="width: 60%;"></div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Empirical Evidence -->
+      <div class="slide" id="slide-4">
+        <div>
+          <div class="eyebrow">AMD Developer Hackathon ACT II &middot; Track 1</div>
+          <h2>Empirical Evidence & Metrics</h2>
+          <h3>"Maintaining 100% accuracy while cutting cost."</h3>
+        </div>
+        
+        <div class="slide-body">
+          <div>
+            <table class="metrics-table">
+              <thead>
+                <tr>
+                  <th>Profile</th>
+                  <th>Local Tasks %</th>
+                  <th>Simulated Eval Score</th>
+                  <th>Fireworks Token Cost</th>
+                  <th>Latency</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Safe</b></td>
+                  <td>0%</td>
+                  <td>19 / 19 (100%)</td>
+                  <td>100% (Baseline)</td>
+                  <td>12.5s</td>
+                </tr>
+                <tr style="color: var(--green-bright); background: var(--green-glow);">
+                  <td><b>Hybrid (Ours)</b></td>
+                  <td><b>52.6%</b></td>
+                  <td><b>19 / 19 (100%)</b></td>
+                  <td><b>47.4% (-52.6% Cost)</b></td>
+                  <td><b>5.8s</b></td>
+                </tr>
+                <tr>
+                  <td><b>Local</b></td>
+                  <td>100%</td>
+                  <td>Qwen Dependent</td>
+                  <td>0% (Free)</td>
+                  <td>45.0s</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="visual-panel">
+            <div class="performance-visual">
+              <span class="eyebrow" style="text-align: center;">Fireworks Token Expenditure</span>
+              <div class="chart-container">
+                <div class="bar-row">
+                  <div class="bar-label">Safe Profile</div>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="background: var(--coral); width: 100%;"></div>
+                  </div>
+                  <span style="font-size: 0.8rem;">100%</span>
+                </div>
+                <div class="bar-row">
+                  <div class="bar-label">Hybrid</div>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="background: var(--green); width: 47.4%;"></div>
+                  </div>
+                  <span style="font-size: 0.8rem; color: var(--green-bright);">47.4%</span>
+                </div>
+                <div class="bar-row">
+                  <div class="bar-label">Local</div>
+                  <div class="bar-track">
+                    <div class="bar-fill" style="background: var(--blue); width: 0%;"></div>
+                  </div>
+                  <span style="font-size: 0.8rem;">0%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="slide-footer">
+          <div class="brand-group">
+            <span>ZeroToken Router</span>
+            <span class="closing-bold">ACT II</span>
+          </div>
+          <div>Slide 4 of 5</div>
+        </div>
+        
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" style="width: 80%;"></div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Why It Matters -->
+      <div class="slide" id="slide-5">
+        <div>
+          <div class="eyebrow">AMD Developer Hackathon ACT II &middot; Track 1</div>
+          <h2>Inference as Infrastructure</h2>
+          <h3>"Automated cost optimization at the routing layer."</h3>
+        </div>
+        
+        <div class="slide-body full-width">
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center; margin-top: 20px;">
+            <div style="background: rgba(30,41,59,0.3); padding: 32px; border-radius: 16px; border: 1px solid var(--border-color);">
+              <h4 style="font-family: 'Outfit'; font-size: 1.5rem; color: var(--green-bright); margin-bottom: 12px;">52.6% Savings</h4>
+              <p style="color: var(--muted); font-size: 0.95rem;">More than half of typical development queries resolved with zero API tokens.</p>
+            </div>
+            <div style="background: rgba(30,41,59,0.3); padding: 32px; border-radius: 16px; border: 1px solid var(--border-color);">
+              <h4 style="font-family: 'Outfit'; font-size: 1.5rem; color: var(--green-bright); margin-bottom: 12px;">Zero Latency Spill</h4>
+              <p style="color: var(--muted); font-size: 0.95rem;">Parallel remote execution and instantaneous heuristic checks speed up evaluation.</p>
+            </div>
+            <div style="background: rgba(30,41,59,0.3); padding: 32px; border-radius: 16px; border: 1px solid var(--border-color);">
+              <h4 style="font-family: 'Outfit'; font-size: 1.5rem; color: var(--green-bright); margin-bottom: 12px;">Production Ready</h4>
+              <p style="color: var(--muted); font-size: 0.95rem;">Dockerized, schema-guaranteed fallback prevents down-time on network errors.</p>
+            </div>
+          </div>
+          <div style="text-align: center; margin-top: 40px;">
+            <p style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em;">
+              "Maximize Accuracy. Minimize Cost. <span class="closing-bold">Zero Complexity.</span>"
+            </p>
+          </div>
+        </div>
+        
+        <div class="slide-footer">
+          <div class="brand-group">
+            <span>ZeroToken Router</span>
+            <span class="closing-bold">ACT II</span>
+          </div>
+          <div>Slide 5 of 5</div>
+        </div>
+        
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" style="width: 100%;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-container">
+    <div class="nav-buttons">
+      <button class="btn-nav" id="prev-btn" disabled aria-label="Previous Slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      </button>
+      <button class="btn-nav" id="next-btn" aria-label="Next Slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+    </div>
+    
+    <div class="dots-indicator">
+      <div class="dot active" onclick="goToSlide(0)"></div>
+      <div class="dot" onclick="goToSlide(1)"></div>
+      <div class="dot" onclick="goToSlide(2)"></div>
+      <div class="dot" onclick="goToSlide(3)"></div>
+      <div class="dot" onclick="goToSlide(4)"></div>
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    function updatePresentation() {
+      slides.forEach((slide, idx) => {
+        if (idx === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      dots.forEach((dot, idx) => {
+        if (idx === currentSlide) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+
+      // Handle button states
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === slides.length - 1;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updatePresentation();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updatePresentation();
+      }
+    }
+
+    function goToSlide(n) {
+      currentSlide = n;
+      updatePresentation();
+    }
+
+    // Attach click events
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    // Keyboard events
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'Space' || e.keyCode === 32) {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>
